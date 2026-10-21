@@ -58,26 +58,47 @@ def hosts_section(spec):
 
 
 def links_section(spec):
-    """TODO (assignment): return HTML listing every link in spec["links"].
+    """Return HTML listing every link in spec["links"]."""
+    items = []
 
-    For example, for links [h1, s1] and [s1, s2] return:
-        <ul><li>h1 — s1</li><li>s1 — s2</li></ul>
-    Use esc() on every name, as hosts_section() does.
-    """
-    return "<p>TODO: list the links.</p>"
+    for link in spec["links"]:
+        left = esc(link[0])
+        right = esc(link[1])
+        items.append(f"<li>{left} — {right}</li>")
+
+    return "<ul>" + "".join(items) + "</ul>"
 
 
 def mermaid_diagram(spec):
-    """TODO (assignment): return Mermaid text that draws the network, built from spec["links"].
-
-    Mermaid turns text like this into a diagram in the browser:
-        graph LR
-          h1 --- s1
-          s1 --- s2
-    Start with "graph LR", then add one line per link. For extra credit, show each host's
-    IPv4 address in its box, e.g.  h1["h1<br>10.NN.0.1"] --- s1
+    """Return Mermaid text drawing the network from spec["links"],
+    including each host's IPv4 address in its box.
     """
-    return "graph LR\n  todo[Diagram not generated yet]"
+    hosts = {
+        host["name"]: host
+        for host in spec.get("hosts", [])
+    }
+
+    lines = ["graph LR"]
+
+    for link in spec["links"]:
+        left, right = link
+
+        if left in hosts:
+            address = esc(hosts[left].get("ip", ""))
+            left_node = f'{left}["{left}<br>{address}"]'
+        else:
+            left_node = left
+
+        if right in hosts:
+            address = esc(hosts[right].get("ip", ""))
+            right_node = f'{right}["{right}<br>{address}"]'
+        else:
+            right_node = right
+
+        lines.append(f"  {left_node} --- {right_node}")
+
+    return "\n".join(lines)
+
 
 
 def evidence_section(ev_id, path, title):

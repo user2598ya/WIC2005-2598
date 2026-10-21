@@ -8,22 +8,57 @@ repository: https://github.com/user2598ya/WIC2005-2598
 answers:
   planes:
     question: "Where are the data, control and management planes in your network?"
-    answer: ""
+    answer: "In my network, data plane is in the switches s1,s2,s3 which forward ethernet frames between six hosts h1 to h6.
+             The control plane is handled by the switches' built in learning and forwarding logic, which learns source MAC address and uses the MAC table to determine which ports should receive frames.
+             The management plane is represented by tools and scripts I use to configure and monitor the network including topology.yaml, build_topo.py and mininet."
   learning:
     question: "How did your switches learn which port leads to each host? Use your MAC table evidence."
-    answer: ""
+    answer: "A switch learns which host is connected to which port by examining source MAC address of each incoming ethernet frame. It records
+             the source mac address and the port where the frame arrived in its MAC address table. In Lab1, after h1 pinged h2, switch s1 learned 
+             the mac address of h1 and h2 on their respective ports. 
+             
+             In Lab 2, for example, macs.txt evidence shows that MAC address 00:00:00:00:00:01 is recorded on port 1 while  00:00:00:00:00:02 is 
+             recorded on port 2. This show how the shitch associates MAC address with ports and uses the table to forward frames. The switch learns
+             these addresses when hosts communicate across network. "
   kind:
     question: "Which of the four kinds of programmability is this assignment (a network described as data, then built and documented by scripts)? Why isn't it any of the other three?"
-    answer: ""
+    answer: "This assignment maily demonstrates automated configuration management. I define the network's hosts, IP address, switches and
+              links in topology.yaml. The build_topo.py scripts validates the data and builds minimet topology while make_page.py generates a webpage 
+              from the same data. 
+              
+              It is not programmable data plane becuase this assignment does not demonstrate programming packet processing behaviour using P4. It also 
+              not externalised control plane the network uses ordinary Linux bridges for MAC learning and frame forwarding, without a separate SDN 
+              controller such as an OpenFlow controller. Lastly, it is not programmatice device interfaces because I do not use APIs or protocols such 
+              as NETCONF, RESTCONF or gNMI with YANG to configure network devices in this assignment. "
   two_am:
     question: "Week 1's 2 a.m. change on 40 switches: what would be different if those switches were described like your network?"
-    answer: ""
+    answer: "If the 40 switches were described using network data model like topology.yaml, I could update the required configuration in one place
+             instead of configuring each switch manually. Automation could apply the changes to all switches faster and reduce human errors and
+             configuration differences. Further more, Git could track the cahnges and help me check previous version.  However, I would still need 
+             to test the automation first because a mistake in the configuration could affect all 40 switches."
   model:
     question: "What's the difference between your network's data model and its serialisation? Use YAML and JSON as the example."
-    answer: ""
+    answer: "A data model describes the structure of my network information, such as hosts, switches, IP addresses and links. while a 
+             serialisation is how this information is written in aformat such as YAML or JSON.
+             
+             In this assignment, topology.yaml uses YAML to represent my network data. The same data could also be written in JSON format. Although 
+             YAML and JSON use diffrenet ways to write the information, they can represent the same data model so the network structure does not
+             change. Therefore, the data model describes the structure of the information, while YAML and JSON are the formats used to store and
+             represent it.  "
   check:
     question: "Why is it better to catch bad data in check() than with pingall? What did IPv6 notice about a duplicate address that IPv4 didn't?"
-    answer: ""
+    answer: "It is better to catch bad data using check() because it can detect problems in the network description before building the network. 
+             In this assignment, check() detected duplicate IPv4 and IPv6 addresses and a link connected to a nonexistent switch s9. However, 
+             pingall only test whether hosts can communicate with each other. It may not clearly identify the original problem in network data.
+             
+             IPv6 detected the duplicate address using Duplicate Adress Detection and marked the address as dadfailed. However, IPv4 did not
+             reject the duplicates address and allowed it to be added as a secondary address. This shows that IPv6 can detect duplicate addresses
+             during address configuration while IPv4 may accept a duplicate address without automatically preventing it. "
   git:
     question: "What does your Git history give you that copying files into folders named topology-v2-final wouldn't?"
-    answer: ""
+    answer: "Git history records the changes I made to my network files over time including what cahnged and the reason for each change. I can 
+             compare different versions, return to an earlier version if something goes wrong and track my progress thorugh commit messages. For 
+             example, my commits show the development of topology, validation checks and network evidence.
+             
+             If I only copied files into folders named topology-v2-final, I would have to manage the versions manually and it would be harder 
+             to see exactly what changed between them. Overall, Git makes it easier to track changes, manage versions ad work safely on my project. "
