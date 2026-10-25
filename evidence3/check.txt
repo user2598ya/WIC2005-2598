@@ -1,0 +1,6 @@
+PROBLEM: LOOP: h1 to h3: router r1 visited twice (path: r1 -> r2 -> r1)
+PROBLEM: LOOP: h2 to h3: router r2 visited twice (path: r2 -> r1 -> r2)
+Fix the description and try again: nothing was built.
+PROBLEM: MISSING ROUTE: h1 to h2: router r1 has no route to 10.98.32.10
+PROBLEM: MISSING ROUTE: h1 to h4: router r1 has no route to 10.98.33.10
+Fix the description and try again: nothing was built.
