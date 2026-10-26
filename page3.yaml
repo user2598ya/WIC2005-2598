@@ -7,13 +7,37 @@ repository: https://github.com/user2598ya/WIC2005-2598
 answers:
   design:
     question: "Describe your design: why these routers, LANs and links, and how you chose the addresses."
-    answer: ""
+    answer: "My network consists of 4 routers connected in a ring topology with 4 LANs and one host in each LAN. The routers connect 
+             the LANs and allow the 4 hosts to communicate with each other.There are a total of 8 links with 4 connecting the hosts to 
+             routers and the other 4 connecting the routers to each other. Thus, The routers' links form a loop which make some pair
+             of routers have two possible path to each other.
+             
+             The initial addresses given for LANs 10.98.1.0/24 and 10.98.32.0/24 connected to r1 and r2 respectively. To extend the network, 
+             10.98.2.0/24 was assigned to the LAN connected to r3, with host h3 using 10.98.2.10 and gateway 10.98.2.1. Similarly, 
+             10.98.33.0/24 was assigned to the LAN connected to r4, with host h4 using 10.98.33.10 and gateway 10.98.33.1.The additional 
+             router links use 10.98.23.0/30 between r2 and r3, 10.98.34.0/30 between r3 and r4, and 10.98.41.0/30 between r4 and r1 to 
+             complete the ring. A /24 subnet mask is used for each LAN, while /30 is used for router-to-router links because only two 
+             usable IP addresses are needed per link. "
   summary:
     question: "Which route summarises several LANs? Which networks does it cover, why is it correct, and what else would it attract if you added a network inside its range?"
-    answer: ""
+    answer: "The summary route is 10.98.32.0/23 which cover 10.98.32.0/24 and 10.98.33.0/24. It is correct because both networks are within
+             the same /23 address range, so one route can reach both LANs through r2. 
+
+             If a new network is added within the 10.98.32.0/23 range, its destination addresses could also match the summary route. 
+             For example, a new subnet such as 10.98.33.128/25 falls within this range. However, if a more specific route exists for that 
+             subnet, the router will use it through longest prefix match.  "
   failure:
     question: "When you took a link down, what happened, and why couldn't your routes recover even though another path existed? What would have recovered?"
-    answer: ""
+    answer: "When the link between r1 and r4 went down, the traceroute from h1 to h3 failed and showed that the network was unreachable.
+             This happened because the network uses static routing, thus r1 did not automatically switch to alternative path through r2
+             eventhough a physical path existed. The static route through r4 became unavailable, and the router did not automatically
+             update its routing table. However, the connectivity recovered after the link was brought back up and the static route was
+             added manually. "
   control_plane:
     question: "In your network, what was the control plane? Who worked out the routes, and what does that mean for a network of 40 routers?"
-    answer: ""
+    answer: "In my network, the control plane is handled by stic routing configuration in network.yaml. The routes were specified manually 
+             and installed by the build_routed.py script. The routers then used these routes to decide where to forward packets.
+             
+             For a network with 40 routers, configuring static routes manually would become more difficult to manage because many routes 
+             would need to be maintained. Dynamic routing protocols such as OSPF can calculate routes automatically and recompute paths when 
+             a link fails which makes the network easier to manage and more adaptable to link failures."

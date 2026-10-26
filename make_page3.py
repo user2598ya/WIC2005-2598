@@ -52,20 +52,43 @@ def links_section(spec):
 
 
 def routing_tables_section(spec):
-    """TODO (assignment): return HTML showing each router's routing table, as the router sees it.
+    """Return HTML showing each router's routing table, longest prefix first."""
+    interfaces = plan(spec)
+    parts = []
 
-    For each router in spec["routers"], list:
-      - its directly connected networks: plan(spec)[router] gives its interfaces;
-        each one's .network is a connected network
-      - its static routes: spec["routes"].get(router), each with "to" and "via"
-    sorted longest prefix first (the order in which longest-prefix match prefers them).
-    Show each entry's destination and where it goes ("directly connected", or the next hop).
-    For example, one table per router:
-        <h3>r1</h3><table><tr><th>Destination</th><th>Next hop</th></tr>
-        <tr><td>10.7.12.0/30</td><td>directly connected</td></tr> ...</table>
-    Use esc() on every value.
-    """
-    return "<p>TODO: show each router's routing table.</p>"
+    for router in spec["routers"]:
+        entries = []
+
+        # Directly connected networks
+        for interface in interfaces[router]:
+            entries.append((interface.network, "directly connected"))
+
+        # Static routes
+        for route in spec["routes"].get(router, []):
+            entries.append((route["to"], route["via"]))
+
+        # Sort by prefix length, longest prefix first
+        entries.sort(
+        key=lambda entry: int(str(entry[0]).split("/")[1]),
+        reverse=True
+        )
+
+        parts.append(f"<h3>{esc(router)}</h3>")
+        parts.append(
+            "<table>"
+            "<tr><th>Destination</th><th>Next hop</th></tr>"
+        )
+
+        for destination, next_hop in entries:
+            parts.append(
+                f"<tr><td>{esc(destination)}</td>"
+                f"<td>{esc(next_hop)}</td></tr>"
+            )
+
+        parts.append("</table>")
+
+    return "\n".join(parts)
+
 
 
 def mermaid_diagram(spec):
